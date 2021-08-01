@@ -1,0 +1,98 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.App__Header {
+  text-align: center
+}
+
+.App__AssignmentSection {
+  display: flex;
+  flex-direction: row;
+  margin: 30px 0 30px 0;
+}
+
+table {
+  flex: auto;
+  width: 80%;
+  text-align: center;
+}
+
+tr {
+  height: 30px;
+}
+
+tbody > tr {
+  cursor: pointer;
+}
+
+.App__Motorcyclists {
+  flex: auto;
+}
+
+.Table__Row {
+  transition: all 400ms;
+}
+
+.Table__Row.assigned {
+  color: #fff;
+  background-color: green;
+  transition: all 400ms;
+}
+
+.App__Message {
+  display: block;
+  opacity: 1;
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  width: 300px;
+  height: 45px;
+  text-align: center;
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 20px 20px -15px rgb(0 0 0 / 40%);
+}
+
+.App__Message.success {
+  opacity: 1;
+  background-color: green;
+  transition: all 400ms;
+}
+
+.App__Message.out {
+  opacity: 0;
+  background-color: green;
+  transition: all 400ms;
+}
+
+.App__Message.danger {
+  opacity: 1;
+  background-color: red;
+  transition: all 400ms;
+}
+
+.App__Message.warning {
+  opacity: 1;
+  color: rgb(104, 104, 104);
+  background-color: yellow;
+  transition: all 400ms;
+}
+
+select {
+  padding: 10px;
+  border-radius: 10px;
+  background: none;
+  border: 1px solid #aaa;
+  box-shadow: 0px 20px 20px -15px rgb(0 0 0 / 40%);
+}

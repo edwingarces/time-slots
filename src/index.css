@@ -24,7 +24,8 @@ code {
 
 table {
   flex: auto;
-  width: 80%;
+  width: 60%;
+  table-layout:fixed;
   text-align: center;
 }
 
@@ -38,15 +39,23 @@ tbody > tr {
 
 .App__Motorcyclists {
   flex: auto;
+  width: 40%;
+  text-align: center;
 }
 
 .Table__Row {
   transition: all 400ms;
 }
 
-.Table__Row.assigned {
+.Table__Row.available {
   color: #fff;
   background-color: green;
+  transition: all 400ms;
+}
+
+.Table__Row.full {
+  color: #fff;
+  background-color: red;
   transition: all 400ms;
 }
 
@@ -95,4 +104,8 @@ select {
   background: none;
   border: 1px solid #aaa;
   box-shadow: 0px 20px 20px -15px rgb(0 0 0 / 40%);
+}
+
+select:focus-visible {
+  outline: none;
 }

@@ -1,14 +1,9 @@
 import React from 'react';
-import {
-  TimeSlot,
-  Motorcyclist,
-  User,
-  findElement,
-} from '../App';
+import { findElement, getAvailableLength } from '../utils';
+import { TimeSlot, User } from '../index.d';
 
 type TableProps = {
   timeSlots: Array<TimeSlot>
-  motorcyclists: Array<Motorcyclist>
   users: Array<User>
   // eslint-disable-next-line no-unused-vars
   onSelect: (i: number) => void
@@ -16,7 +11,6 @@ type TableProps = {
 
 const Table = ({
   timeSlots,
-  motorcyclists,
   users,
   onSelect,
 }: TableProps) => (
@@ -35,15 +29,15 @@ const Table = ({
       </tr>
     </thead>
     <tbody>
-      {timeSlots.map(({ time, motorcyclist, user }, index) => (
+      {timeSlots.map((slot, index) => (
         <tr
           key={index}
-          className={`Table__Row${motorcyclist !== 0 ? ' assigned' : ''}`}
+          className={`Table__Row${getAvailableLength(slot.motorcyclists) > 0 ? ' available' : ' full'}`}
           onClick={() => onSelect(index)}
         >
-          <td>{time}</td>
-          <td>{findElement(motorcyclists, motorcyclist).name}</td>
-          <td>{findElement(users, user).name}</td>
+          <td>{slot.time}</td>
+          <td>{`${8 - getAvailableLength(slot.motorcyclists)} Asignados`}</td>
+          <td>{slot.users.map((user) => `${findElement(users, user).name}, `)}</td>
         </tr>
       ))}
     </tbody>

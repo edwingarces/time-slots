@@ -1,73 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import Message from './components/Message';
 import Table from './components/Table';
-import {
-  timeSlotsList,
-  motorcyclistsList,
-  usersList,
-  initialNotification,
-} from './initialState';
+import { timeSlotsList, usersList, initialNotification } from './initialState';
+import { TimeSlot, Motorcyclist, Notification } from './index.d';
+import { findElementIndex } from './utils';
 
-export type TimeSlot = {
-  time: string
-  motorcyclist: number | undefined
-  user: number
-}
-
-export type Motorcyclist = {
-  id: number
-  available: boolean
-  name: string
-}
-
-export type User = {
-  id: number
-  name: string
-  selected: boolean
-}
-
-export type Notification = {
-  message: string
-  type: 'success' | 'danger' | 'warning' | 'out'
-}
-
-export const findElement = (
-  array: Array<Motorcyclist | User>,
-  searchId: number | undefined,
-) => {
-  const found = array.filter(({ id }) => id === searchId);
-  return found[0];
-};
-
-export const findElementIndex = (
-  array: Array<Motorcyclist | User>,
-  searchId: number | undefined,
-) => (
-  array.findIndex(({ id }) => id === searchId)
-);
-
-export const App = () => {
+const App = () => {
   const [timeSlots, setTimeSlots] = useState<Array<TimeSlot>>(timeSlotsList);
-  const [motorcyclists, setMotorcyclists] = useState<Array<Motorcyclist>>(motorcyclistsList);
-  const [users, setUsers] = useState<Array<User>>(usersList);
+  const users = usersList;
+  const [selectedUser, setSelectedUser] = useState<number>(1);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('08:00');
+  const [
+    motorcyclists,
+    setMotorcyclists,
+  ] = useState<Array<Motorcyclist>>(timeSlots[0].motorcyclists);
   const [notification, setNotification] = useState<Notification>(initialNotification);
 
   const assignTimeSlot = (index: number) => {
     const immutableTimeSlots = [...timeSlots];
-    const immutableMotorcyclists = [...motorcyclists];
-    const availableMotorcyclists = motorcyclists.filter(({ available }) => available);
+    const immutableMotorcyclists = [...immutableTimeSlots[index].motorcyclists];
+    const availableMotorcyclists = immutableMotorcyclists.filter(({ available }) => available);
     const firstAvailable = availableMotorcyclists.pop();
-    const firstAvailableIndex = findElementIndex(motorcyclists, firstAvailable?.id);
-    const filterSelected = users.filter(({ selected }) => selected);
-    const userSelected = filterSelected[0].id;
-    immutableTimeSlots[index] = {
-      ...immutableTimeSlots[index],
-      motorcyclist: firstAvailable?.id,
-      user: userSelected,
-    };
+    const firstAvailableIndex = findElementIndex(immutableMotorcyclists, firstAvailable?.id);
+    const slotUsers = [...immutableTimeSlots[index].users];
+    slotUsers.push(selectedUser);
     immutableMotorcyclists[firstAvailableIndex] = {
       ...immutableMotorcyclists[firstAvailableIndex],
       available: false,
+    };
+    immutableTimeSlots[index] = {
+      ...immutableTimeSlots[index],
+      motorcyclists: immutableMotorcyclists,
+      users: slotUsers,
     };
     setTimeSlots(immutableTimeSlots);
     setMotorcyclists(immutableMotorcyclists);
@@ -75,20 +39,22 @@ export const App = () => {
 
   const unassignTimeSlot = (index: number) => {
     const immutableTimeSlots = [...timeSlots];
-    const immutableMotorcyclists = [...motorcyclists];
-    const currentMotorcyclist = findElement(
-      motorcyclists,
-      immutableTimeSlots[index].motorcyclist,
+    const immutableMotorcyclists = [...immutableTimeSlots[index].motorcyclists];
+    const notAvailableMotorcyclists = immutableMotorcyclists.filter(({ available }) => !available);
+    const firstNotAvailableMotorcyclists = notAvailableMotorcyclists.pop();
+    const motorcyclistIndex = findElementIndex(
+      immutableMotorcyclists,
+      firstNotAvailableMotorcyclists?.id,
     );
-    const motorcyclistIndex = findElementIndex(motorcyclists, currentMotorcyclist.id);
-    immutableTimeSlots[index] = {
-      ...immutableTimeSlots[index],
-      motorcyclist: 0,
-      user: 0,
-    };
+    const slotUsers = immutableTimeSlots[index].users.filter((user) => user !== selectedUser);
     immutableMotorcyclists[motorcyclistIndex] = {
       ...immutableMotorcyclists[motorcyclistIndex],
       available: true,
+    };
+    immutableTimeSlots[index] = {
+      ...immutableTimeSlots[index],
+      motorcyclists: immutableMotorcyclists,
+      users: slotUsers,
     };
     setTimeSlots(immutableTimeSlots);
     setMotorcyclists(immutableMotorcyclists);
@@ -96,23 +62,25 @@ export const App = () => {
 
   const handleSelect = (index: number) => {
     const immutableTimeSlots = [...timeSlots];
-    const availableMotorcyclists = motorcyclists.filter(({ available }) => available);
-    const filterSelected = users.filter(({ selected }) => selected);
-    const userSelected = filterSelected[0].id;
-    const isPossibleToAssign = availableMotorcyclists.length
-    && immutableTimeSlots[index].user === 0;
-    const isPossibleToUnassign = immutableTimeSlots[index].motorcyclist !== 0
-    && immutableTimeSlots[index].user === userSelected;
+    setSelectedTimeSlot(immutableTimeSlots[index].time);
+    setMotorcyclists(immutableTimeSlots[index].motorcyclists);
+    const availableMotorcyclists = immutableTimeSlots[index].motorcyclists.filter(
+      ({ available }) => available,
+    );
+    const userInSlot = immutableTimeSlots[index].users.filter((user) => user === selectedUser);
+    const isPossibleToAssign = availableMotorcyclists.length && !userInSlot.length;
+    const isPossibleToUnassign = availableMotorcyclists.length < 8
+    && userInSlot.length;
     if (isPossibleToUnassign) {
       unassignTimeSlot(index);
       setNotification({
-        message: 'Se liberó el horario',
+        message: 'Se liberó un motociclista',
         type: 'success',
       });
     } else if (isPossibleToAssign) {
       assignTimeSlot(index);
       setNotification({
-        message: 'Se tomó el horario',
+        message: 'Se asignó un motociclista',
         type: 'success',
       });
     } else if (!availableMotorcyclists.length) {
@@ -120,30 +88,12 @@ export const App = () => {
         message: 'No hay más motociclistas disponibles',
         type: 'danger',
       });
-    } else if (immutableTimeSlots[index].user !== userSelected) {
-      setNotification({
-        message: 'No se puede realizar la acción',
-        type: 'warning',
-      });
     }
   };
 
   const handleSelectUser = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = target;
-    const filteredSelectedUsers = users.filter((user) => user.selected);
-    const currentSelectedUser = filteredSelectedUsers[0];
-    const selectedUserIndex = findElementIndex(users, currentSelectedUser.id);
-    const userIndex = findElementIndex(users, parseInt(value, 10));
-    const immutableUsers = [...users];
-    immutableUsers[userIndex] = {
-      ...immutableUsers[userIndex],
-      selected: true,
-    };
-    immutableUsers[selectedUserIndex] = {
-      ...immutableUsers[selectedUserIndex],
-      selected: false,
-    };
-    setUsers(immutableUsers);
+    setSelectedUser(parseInt(value, 10));
     setNotification({
       message: 'Cambio de usuario',
       type: 'success',
@@ -151,24 +101,32 @@ export const App = () => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       setNotification({
         ...notification,
         type: 'out',
       });
     }, 2000);
+    return () => {
+      clearTimeout(timeout);
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line no-undef
+    let timeout: NodeJS.Timeout;
     if (notification.type !== 'out') {
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         setNotification({
           ...notification,
           type: 'out',
         });
       }, 2000);
     }
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [notification]);
 
   return (
@@ -176,7 +134,12 @@ export const App = () => {
       <div className="App__Header">
         <h1>Tramos horarios</h1>
         <h2>Seleccione un usuario</h2>
-        <select name="users" id="users" onChange={handleSelectUser}>
+        <select
+          name="users"
+          id="users"
+          value={selectedUser}
+          onChange={handleSelectUser}
+        >
           {users.map(({ id, name }, index) => {
             if (id !== 0) return <option key={index} value={id}>{name}</option>;
             return null;
@@ -186,21 +149,22 @@ export const App = () => {
       <div className="App__AssignmentSection">
         <Table
           timeSlots={timeSlots}
-          motorcyclists={motorcyclists}
           users={users}
           onSelect={handleSelect}
         />
-        <div className="App__Motorcyclists">
-          <h2>Motociclistas</h2>
-          {motorcyclists.map(({ id, name, available }) => (
-            <>
-              <p>
-                {id !== 0 && name}
-                {id !== 0 && (available ? ' Libre' : ' Asignado')}
-              </p>
-            </>
-          ))}
-        </div>
+        {motorcyclists
+          ? (
+            <div className="App__Motorcyclists">
+              <h4>{`Motociclistas de las ${selectedTimeSlot}`}</h4>
+              {motorcyclists.map(({ name, available }, index) => (
+                <p key={index}>
+                  {name}
+                  {available ? ' Libre' : ' Asignado'}
+                </p>
+              ))}
+            </div>
+          )
+          : null}
       </div>
       <Message
         message={notification.message}
@@ -209,3 +173,5 @@ export const App = () => {
     </div>
   );
 };
+
+export default App;

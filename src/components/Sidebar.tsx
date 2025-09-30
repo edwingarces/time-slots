@@ -20,7 +20,7 @@ const Sidebar = ({ selectedSlot, selectedTime, history }: SidebarProps) => (
         <p>{selectedSlot ? `${8 - getAvailableLength(selectedSlot.motorcyclists)} asignados` : 'Selecciona un horario para ver detalles.'}</p>
       </div>
       {selectedSlot ? (
-        <ul className="motorcyclist-list" role="list">
+        <ul className="motorcyclist-list">
           {selectedSlot.motorcyclists.map((motorcyclist) => (
             <li key={motorcyclist.id} className="motorcyclist-list__item">
               <div className="motorcyclist-list__info">
@@ -43,7 +43,7 @@ const Sidebar = ({ selectedSlot, selectedTime, history }: SidebarProps) => (
       <div className="sidebar__heading">
         <h3>Historial</h3>
       </div>
-      <ul className="history-list" role="list">
+      <ul className="history-list">
         {history.length ? history.map((entry) => (
           <li key={entry.id} className="history-list__item">
             <time dateTime={entry.timestamp}>{formatHistoryTimestamp(new Date(entry.timestamp))}</time>

@@ -1,111 +1,547 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  color-scheme: light;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  --color-primary: #2563eb;
+  --color-primary-100: #dbeafe;
+  --color-secondary: #64748b;
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #e2e8f0;
+  --color-neutral-500: #64748b;
+  --color-neutral-700: #475569;
+  --color-neutral-900: #111827;
+  --shadow-md: 0 10px 25px -12px rgba(37, 99, 235, 0.35);
+  --shadow-sm: 0 10px 15px -12px rgba(15, 23, 42, 0.3);
+  --transition-base: 200ms ease;
+  --layout-max-width: 1200px;
+}
+
+.theme-dark {
+  color-scheme: dark;
+  --color-neutral-50: #0f172a;
+  --color-neutral-100: #1e293b;
+  --color-neutral-500: #cbd5f5;
+  --color-neutral-700: #e0e7ff;
+  --color-neutral-900: #f1f5f9;
+  --shadow-md: 0 12px 40px -16px rgba(148, 163, 184, 0.35);
+  background: var(--color-neutral-50);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background: var(--color-neutral-50);
+  color: var(--color-neutral-900);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+input,
+button,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
 }
 
-.App__Header {
-  text-align: center
-}
-
-.App__AssignmentSection {
-  display: flex;
-  flex-direction: row;
-  margin: 30px 0 30px 0;
-}
-
-table {
-  flex: auto;
-  width: 60%;
-  table-layout:fixed;
-  text-align: center;
-}
-
-tr {
-  height: 30px;
-}
-
-tbody > tr {
+button {
+  border: none;
+  background: none;
   cursor: pointer;
 }
 
-.App__Motorcyclists {
-  flex: auto;
-  width: 40%;
-  text-align: center;
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-neutral-50);
+  transition: background var(--transition-base), color var(--transition-base);
 }
 
-.Table__Row {
-  transition: all 400ms;
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  max-width: var(--layout-max-width);
+  width: 100%;
+  margin: 0 auto;
 }
 
-.Table__Row.available {
-  color: #fff;
-  background-color: green;
-  transition: all 400ms;
+.app-content {
+  flex: 1;
 }
 
-.Table__Row.full {
-  color: #fff;
-  background-color: red;
-  transition: all 400ms;
+.app-header {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background: var(--color-neutral-50);
+  border-bottom: 1px solid var(--color-neutral-100);
+  box-shadow: var(--shadow-sm);
 }
 
-.App__Message {
-  display: block;
-  opacity: 1;
-  position: fixed;
-  top: 30px;
-  right: 30px;
-  width: 300px;
-  height: 45px;
-  text-align: center;
-  color: #fff;
-  border-radius: 10px;
-  box-shadow: 0px 20px 20px -15px rgb(0 0 0 / 40%);
+.app-header__titles > h1 {
+  font-size: 1.75rem;
+  color: var(--color-neutral-900);
 }
 
-.App__Message.success {
-  opacity: 1;
-  background-color: green;
-  transition: all 400ms;
+.app-header__titles > p {
+  color: var(--color-neutral-500);
+  font-size: 0.95rem;
 }
 
-.App__Message.out {
-  opacity: 0;
-  background-color: green;
-  transition: all 400ms;
+.app-header__controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  align-items: flex-end;
 }
 
-.App__Message.danger {
-  opacity: 1;
-  background-color: red;
-  transition: all 400ms;
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.App__Message.warning {
-  opacity: 1;
-  color: rgb(104, 104, 104);
-  background-color: yellow;
-  transition: all 400ms;
+.form-field__label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-neutral-700);
 }
 
-select {
-  padding: 10px;
-  border-radius: 10px;
-  background: none;
-  border: 1px solid #aaa;
-  box-shadow: 0px 20px 20px -15px rgb(0 0 0 / 40%);
+.form-field__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--color-neutral-100);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
 }
 
-select:focus-visible {
+.theme-dark .form-field__control {
+  background: var(--color-neutral-100);
+}
+
+.form-field__control:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.form-field__icon {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  color: var(--color-neutral-500);
+}
+
+.form-field__icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.form-field select,
+.form-field input {
+  border: none;
+  background: transparent;
+  width: 100%;
   outline: none;
+}
+
+.segmented-control,
+.view-toggle {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--color-neutral-100);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-dark .segmented-control,
+.theme-dark .view-toggle {
+  background: rgba(148, 163, 184, 0.2);
+}
+
+.segmented-control__option,
+.view-toggle__option {
+  padding: 10px 16px;
+  border-radius: 10px;
+  color: var(--color-neutral-500);
+  transition: all var(--transition-base);
+}
+
+.segmented-control__option.is-active,
+.view-toggle__option.is-active {
+  background: #fff;
+  color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.button {
+  padding: 12px 16px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.button--ghost {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.scheduler-grid {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.theme-dark .scheduler-grid {
+  background: rgba(30, 41, 59, 0.9);
+}
+
+.scheduler-grid__header,
+.scheduler-grid__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 24px;
+  font-size: 0.9rem;
+}
+
+.scheduler-grid__header {
+  background: var(--color-neutral-100);
+  font-weight: 600;
+  color: var(--color-neutral-700);
+}
+
+.scheduler-grid__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.scheduler-grid__row {
+  border: none;
+  border-bottom: 1px solid var(--color-neutral-100);
+  text-align: left;
+  color: var(--color-neutral-900);
+  transition: background var(--transition-base), transform var(--transition-base);
+}
+
+.scheduler-grid__row:hover,
+.scheduler-grid__row:focus-visible {
+  outline: none;
+  background: var(--color-primary-100);
+  transform: translateX(4px);
+}
+
+.scheduler-grid__row--available {
+  border-left: 4px solid var(--color-primary);
+}
+
+.scheduler-grid__row--assigned {
+  border-left: 4px solid var(--color-warning);
+}
+
+.scheduler-grid__row--full {
+  border-left: 4px solid var(--color-error);
+  cursor: not-allowed;
+}
+
+.scheduler-grid__row.is-user-owned {
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.calendar-view {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  padding: 24px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.calendar-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 16px;
+  background: var(--color-neutral-50);
+  border: 1px solid transparent;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  text-align: left;
+}
+
+.calendar-card:hover,
+.calendar-card:focus-visible {
+  outline: none;
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.calendar-card--available {
+  border-color: var(--color-primary);
+}
+
+.calendar-card--assigned {
+  border-color: var(--color-warning);
+}
+
+.calendar-card--full {
+  border-color: var(--color-error);
+  cursor: not-allowed;
+}
+
+.calendar-card.is-user-owned {
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.calendar-card__time {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.calendar-card__availability {
+  font-size: 0.9rem;
+  color: var(--color-neutral-500);
+}
+
+.calendar-card__status[data-status='available'] {
+  color: var(--color-primary);
+}
+
+.calendar-card__status[data-status='assigned'] {
+  color: var(--color-warning);
+}
+
+.calendar-card__status[data-status='full'] {
+  color: var(--color-error);
+}
+
+.sidebar {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 280px;
+}
+
+.theme-dark .sidebar {
+  background: rgba(30, 41, 59, 0.9);
+}
+
+.sidebar__section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar__heading > h2 {
+  font-size: 1.5rem;
+}
+
+.motorcyclist-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.motorcyclist-list__item {
+  display: flex;
+  align-items: center;
+}
+
+.motorcyclist-list__info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.motorcyclist-list__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-primary-100);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge--success {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--color-success);
+}
+
+.badge--error {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-error);
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+}
+
+.history-list__item {
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--color-neutral-50);
+  border: 1px solid var(--color-neutral-100);
+  color: var(--color-neutral-700);
+}
+
+.history-list__item time {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-neutral-500);
+  margin-bottom: 4px;
+}
+
+.history-list__placeholder {
+  font-size: 0.9rem;
+  color: var(--color-neutral-500);
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  min-width: 280px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  box-shadow: var(--shadow-md);
+  color: #fff;
+  transition: transform var(--transition-base), opacity var(--transition-base);
+}
+
+.toast__icon {
+  font-size: 1.5rem;
+}
+
+.toast__message {
+  flex: 1;
+  font-weight: 500;
+}
+
+.toast__close {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 1.25rem;
+}
+
+.toast--success {
+  background: var(--color-success);
+}
+
+.toast--danger {
+  background: var(--color-error);
+}
+
+.toast--warning {
+  background: var(--color-warning);
+  color: var(--color-neutral-900);
+}
+
+.toast--info {
+  background: var(--color-primary);
+}
+
+.toast--out {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@media (min-width: 1024px) {
+  .app-main {
+    flex-direction: row;
+  }
+
+  .app-content {
+    flex: 2;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 24px;
+    height: fit-content;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header__controls {
+    grid-template-columns: 1fr;
+  }
+
+  .header-actions {
+    justify-content: flex-start;
+  }
+
+  .toast {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
 }

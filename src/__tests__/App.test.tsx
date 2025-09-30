@@ -1,37 +1,27 @@
-/* eslint-disable no-undef */
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import App from '../App';
 
-describe('Suit for testing App component', () => {
-  test('Render main screen', () => {
+describe('App scheduler', () => {
+  test('renders redesigned header title', () => {
     render(<App />);
-    const header = screen.getByText(/Tramos horarios/i);
-    expect(header).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Gestión de horarios/i })).toBeInTheDocument();
   });
-  test('Assign motorcyclist', () => {
+
+  test('switches between view modes', () => {
     render(<App />);
-    const tableElement = screen.getByText('08:00');
-    fireEvent.click(tableElement);
-    const tableDescription = screen.getByText(/1 Asignados/i);
-    expect(tableDescription).toBeInTheDocument();
+    const calendarToggle = screen.getByRole('radio', { name: /Calendario/ });
+    fireEvent.click(calendarToggle);
+    expect(calendarToggle).toHaveAttribute('aria-checked', 'true');
   });
-  test('Change user', () => {
+
+  test('assigns and releases a timeslot for selected user', () => {
     render(<App />);
-    const select = screen.getByText('Usuario 1');
-    fireEvent.click(select);
-    const dropdownElement = screen.getByText('Usuario 2');
-    fireEvent.click(dropdownElement);
-    const user = screen.getByText('Usuario 2');
-    expect(user).toBeInTheDocument();
-  });
-  test('Leave a motorcyclist', () => {
-    render(<App />);
-    const tableElement = screen.getByText('08:00');
-    fireEvent.click(tableElement);
-    const tableDescription = screen.getByText(/1 Asignados/i);
-    fireEvent.click(tableDescription);
-    const message = screen.getByText('Se liberó un motociclista');
-    expect(message).toBeInTheDocument();
+    const firstSlot = screen.getByRole('button', { name: /08:00/ });
+    fireEvent.click(firstSlot);
+    expect(screen.getByText(/Se asignó un motociclista/)).toBeInTheDocument();
+    fireEvent.click(firstSlot);
+    expect(screen.getByText(/Se liberó un motociclista/)).toBeInTheDocument();
   });
 });
+
